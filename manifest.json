@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "You Only Watch Once",
+    "version": "1.0",
+    "description": "Prevent re-watching of YouTube videos.",
+    "permissions": [
+      "storage",
+      "activeTab",
+      "scripting",
+      "tabs",
+      "webNavigation"
+    ],
+    "host_permissions": [
+      "*://www.youtube.com/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://www.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon-16.png",
+            "48": "icons/icon-48.png",
+            "128": "icons/icon-128.png"
+        }
+    }
+}
