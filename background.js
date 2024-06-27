@@ -21,7 +21,7 @@ function handleNavigation(details) {
                         target: { tabId: details.tabId },
                         func: blockVideo,
                     });
-                } else {    
+                } else {
                     chrome.scripting.executeScript({
                         target: { tabId: details.tabId },
                         func: unblockVideo,
@@ -35,7 +35,6 @@ function handleNavigation(details) {
 
 function blockVideo() {
     const videoContainer = document.querySelector('.html5-video-player');
-    const rect = videoContainer.getBoundingClientRect();
     if (videoContainer) {
         // videoContainer.style.display = 'none';
         videoContainer.style.filter = 'blur(50px)';

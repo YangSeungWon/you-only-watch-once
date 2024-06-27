@@ -1,30 +1,18 @@
 {
     "manifest_version": 3,
-    "name": "You Only Watch Once",
+    "name": "You Only Watch Once (YOWO)",
     "version": "1.0",
-    "description": "Prevent re-watching of YouTube videos.",
+    "description": "Savor the moment by ensuring every YouTube video is a one-time experience.",
     "permissions": [
-      "storage",
-      "activeTab",
-      "scripting",
-      "tabs",
-      "webNavigation"
-    ],
-    "host_permissions": [
-      "*://www.youtube.com/*"
+        "storage",
+        "scripting",
+        "webNavigation"
     ],
     "background": {
-      "service_worker": "background.js"
+        "service_worker": "background.js"
     },
-    "content_scripts": [
-        {
-            "matches": [
-                "*://www.youtube.com/*"
-            ],
-            "js": [
-                "content.js"
-            ]
-        }
+    "host_permissions": [
+        "*://www.youtube.com/*"
     ],
     "action": {
         "default_popup": "popup.html",
