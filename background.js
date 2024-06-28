@@ -27,10 +27,41 @@ function handleNavigation(details) {
                         func: unblockVideo,
                     });
                     chrome.storage.sync.set({ watchedVideos: [...watchedVideos, videoId] });
+                    blockThumbnail(videoId);
                 }
             });
         }
     }
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.get('watchedVideos', (data) => {
+        const watchedVideos = data.watchedVideos || [];
+        for (let videoId of watchedVideos) {
+            blockThumbnail(videoId);
+        }
+    });
+});
+
+function blockThumbnail(videoId) {
+    chrome.declarativeNetRequest.getDynamicRules((rules) => {
+        const count = rules.length;
+        chrome.declarativeNetRequest.updateDynamicRules({
+            addRules: [
+                {
+                    id: count,
+                    priority: 1,
+                    action: {
+                        type: 'block'
+                    },
+                    condition: {
+                        urlFilter: '*://i.ytimg.com/vi/' + videoId + '/*',
+                        resourceTypes: ['image']
+                    }
+                }
+            ], removeRuleIds: [count]
+        });
+    });
 }
 
 function blockVideo() {
