@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "You Only Watch Once (YOWO)",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Savor the moment by ensuring every YouTube video is a one-time experience.",
     "permissions": [
         "storage",
