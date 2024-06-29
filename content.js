@@ -3,5 +3,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         blockVideo();
     } else if (request.action === 'unblockVideo') {
         unblockVideo();
+    } else if (request.action === 'blockThumbnail') {
+        blockThumbnail();
     }
 });

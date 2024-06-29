@@ -11,6 +11,10 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
 });
 
 function handleNavigation(details) {
+    chrome.scripting.executeScript({
+        target: { tabId: details.tabId },
+        func: blockThumbnail,
+    });
     if (details.url.includes("youtube.com/watch")) {
         const videoId = new URL(details.url).searchParams.get('v');
         if (videoId) {
@@ -27,42 +31,12 @@ function handleNavigation(details) {
                         func: unblockVideo,
                     });
                     chrome.storage.sync.set({ watchedVideos: [...watchedVideos, videoId] });
-                    blockThumbnail(videoId);
                 }
             });
         }
     }
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.get('watchedVideos', (data) => {
-        const watchedVideos = data.watchedVideos || [];
-        for (let videoId of watchedVideos) {
-            blockThumbnail(videoId);
-        }
-    });
-});
-
-function blockThumbnail(videoId) {
-    chrome.declarativeNetRequest.getDynamicRules((rules) => {
-        const count = rules.length;
-        chrome.declarativeNetRequest.updateDynamicRules({
-            addRules: [
-                {
-                    id: count,
-                    priority: 1,
-                    action: {
-                        type: 'block'
-                    },
-                    condition: {
-                        urlFilter: '*://i.ytimg.com/vi/' + videoId + '/*',
-                        resourceTypes: ['image']
-                    }
-                }
-            ], removeRuleIds: [count]
-        });
-    });
-}
 
 function blockVideo() {
     const videoContainer = document.querySelector('.html5-video-player');
@@ -78,4 +52,18 @@ function unblockVideo() {
         // videoContainer.style.display = 'block';
         videoContainer.style.filter = 'none';
     }
+}
+
+function blockThumbnail() {
+    const thumbnailList = document.getElementsByClassName('ytd-thumbnail');
+    chrome.storage.sync.get('watchedVideos', (data) => {
+        const watchedVideos = data.watchedVideos || [];
+        for (let thumbnail of thumbnailList) {
+            if (thumbnail.href === undefined || thumbnail.href === '') { continue; }
+            const videoId = thumbnail.href.split('v=')[1].split('&')[0];
+            if (videoId && watchedVideos.includes(videoId)) {
+                thumbnail.style.filter = 'blur(50px)';
+            }
+        }
+    });
 }
