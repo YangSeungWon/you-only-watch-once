@@ -6,7 +6,7 @@
     "permissions": [
         "storage",
         "scripting",
-        "webNavigation",
+        "webNavigation"
     ],
     "background": {
         "service_worker": "background.js"
